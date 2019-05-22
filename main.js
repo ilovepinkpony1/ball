@@ -1,29 +1,31 @@
 'use strict';
 
 const ball = document.querySelector('.ball');
+const field = document.querySelector('.field');
 
-document.addEventListener('click', event => {
-const ballStyles = getComputedStyle(ball);
-const width = ballStyles.width.replace('px', '');
-const height = ballStyles.height.replace('px', '');
+field.addEventListener('click', event => {
+  const ballWidth = ball.getBoundingClientRect().width;
+  const ballHeight = ball.getBoundingClientRect().height;
+  const borderWidth = Number(getComputedStyle(field).borderWidth.replace('px', ''));
+  const mousePosX = event.clientX;
+  const mousePosY = event.clientY;
+  const fieldWidth =field.getBoundingClientRect().width;
+  const fieldHeight = field.getBoundingClientRect().height; 
 
-ball.style.left = `${event.clientX - width / 2}px`;
-ball.style.top = `${event.clientY - height / 2}px`;
 
-if (event.clientX + width / 2 > window.innerWidth) {
-  ball.style.left = `${window.innerWidth - width}px`;
-}
+ if (mousePosX < borderWidth + ballWidth / 2) {
+  ball.style.left = '0px';
+ } else  if (mousePosX > fieldWidth - borderWidth * 2 - ballWidth / 2) {
+  ball.style.left = `${fieldWidth - borderWidth * 2 - ballWidth}px`;
+ } else {
+  ball.style.left = `${mousePosX - ballWidth / 2 - borderWidth}px`;
+ }
 
-if (event.clientY + height / 2 > window.innerHeight) {
-  ball.style.top = `${window.innerHeight - height}px`;
-}
-
-if (event.clientX - width / 2 < 0) {
-  ball.style.left = `${0}px`;
-}
-
-if (event.clientY - height / 2 < 0) {
-  ball.style.top = `${0}px`;
-}
-
-});
+ if (mousePosY < borderWidth + ballHeight / 2) {
+  ball.style.top = '0px';
+ } else if (mousePosY > fieldHeight - borderWidth * 2 - ballHeight / 2) {
+  ball.style.top = `${fieldHeight - borderWidth * 2 - ballHeight}px`;
+ } else {
+  ball.style.top = `${mousePosY - ballHeight / 2 - borderWidth}px`;
+ }
+}) 
