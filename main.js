@@ -1,31 +1,44 @@
 'use strict';
 
-const ball = document.querySelector('.ball');
-const field = document.querySelector('.field');
+window.addEventListener('load', main);
 
-field.addEventListener('click', event => {
-  const ballWidth = ball.getBoundingClientRect().width;
-  const ballHeight = ball.getBoundingClientRect().height;
+function main() {
+  setBallPosition();
+}
+
+function setBallPosition() {
+  const ball = document.querySelector('.ball');
+  const field = document.querySelector('.field');
   const borderWidth = Number(getComputedStyle(field).borderWidth.replace('px', ''));
-  const mousePosX = event.clientX;
-  const mousePosY = event.clientY;
-  const fieldWidth =field.getBoundingClientRect().width;
-  const fieldHeight = field.getBoundingClientRect().height; 
+  const { width: fieldWidth, height: fieldHeight } = field.getBoundingClientRect();
+  const { height: ballHeight, width: ballWidth } = ball.getBoundingClientRect();
 
+  const maxPosition = {
+    left: borderWidth + ballWidth / 2,
+    right: fieldWidth - borderWidth * 2 - ballWidth / 2,
+    top: borderWidth + ballHeight / 2,
+    bottom: fieldHeight - borderWidth * 2 - ballHeight / 2,
+  };
 
- if (mousePosX < borderWidth + ballWidth / 2) {
-  ball.style.left = '0px';
- } else  if (mousePosX > fieldWidth - borderWidth * 2 - ballWidth / 2) {
-  ball.style.left = `${fieldWidth - borderWidth * 2 - ballWidth}px`;
- } else {
-  ball.style.left = `${mousePosX - ballWidth / 2 - borderWidth}px`;
- }
+  const minMaxSetPosition = {
+    left: 0,
+    right: fieldWidth - borderWidth * 2 - ballWidth,
+    top: 0,
+    bottom: fieldHeight - borderWidth * 2 - ballHeight,
+  }
 
- if (mousePosY < borderWidth + ballHeight / 2) {
-  ball.style.top = '0px';
- } else if (mousePosY > fieldHeight - borderWidth * 2 - ballHeight / 2) {
-  ball.style.top = `${fieldHeight - borderWidth * 2 - ballHeight}px`;
- } else {
-  ball.style.top = `${mousePosY - ballHeight / 2 - borderWidth}px`;
- }
-}) 
+  field.addEventListener('click', () => {
+    const mousePosX = event.clientX;
+    const mousePosY = event.clientY;
+    const commonX = mousePosX - ballWidth / 2 - borderWidth;
+    const commonY = mousePosY - ballHeight / 2 - borderWidth;
+    const left = mousePosX < maxPosition.left ? minMaxSetPosition.left :
+     (mousePosX > maxPosition.right ? minMaxSetPosition.right : commonX);
+
+    const top = mousePosY < maxPosition.top ? minMaxSetPosition.top :
+     (mousePosY > maxPosition.bottom ?  minMaxSetPosition.bottom : commonY);
+
+    ball.style.left = `${left}px`;
+    ball.style.top = `${top}px`;
+  });
+}
