@@ -3,10 +3,10 @@
 window.addEventListener('load', main);
 
 function main() {
-  setBallPosition();
+  getBallParams();
 }
 
-function setBallPosition() {
+function getBallParams() {
   const ball = document.querySelector('.ball');
   const field = document.querySelector('.field');
   const borderWidth = Number(getComputedStyle(field).borderWidth.replace('px', ''));
@@ -27,18 +27,34 @@ function setBallPosition() {
     bottom: fieldHeight - borderWidth * 2 - ballHeight,
   }
 
-  field.addEventListener('click', () => {
+  field.addEventListener('click', setBallPosition);
+
+  function setBallPosition() {
     const mousePosX = event.clientX;
     const mousePosY = event.clientY;
     const commonX = mousePosX - ballWidth / 2 - borderWidth;
     const commonY = mousePosY - ballHeight / 2 - borderWidth;
-    const left = mousePosX < maxPosition.left ? minMaxSetPosition.left :
-     (mousePosX > maxPosition.right ? minMaxSetPosition.right : commonX);
+    let left = 0;
+    let top = 0;
 
-    const top = mousePosY < maxPosition.top ? minMaxSetPosition.top :
-     (mousePosY > maxPosition.bottom ?  minMaxSetPosition.bottom : commonY);
+    if (mousePosX < maxPosition.left) {
+      left = minMaxSetPosition.left;
+    } else if (mousePosX > maxPosition.right) {
+      left = minMaxSetPosition.right;
+    } else {
+      left = commonX;
+    }
+
+    if (mousePosY < maxPosition.top) {
+      top = minMaxSetPosition.top;
+    } else if (mousePosY > maxPosition.bottom) {
+      top = minMaxSetPosition.bottom;
+    } else {
+      top = commonY;
+    }
 
     ball.style.left = `${left}px`;
     ball.style.top = `${top}px`;
-  });
+  }
 }
+
