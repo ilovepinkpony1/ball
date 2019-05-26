@@ -1,0 +1,22 @@
+.ball {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  transition: all .6s ease;
+  display: block;
+}
+
+.field {
+  width: 400px;
+  height: 400px;
+  border: 10px groove black;
+  background-color: #00FF00;
+  position: relative;
+  overflow: hidden;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
